@@ -1,0 +1,73 @@
+// {
+//   // Visit https://aka.ms/tsconfig to read more about this file
+//   "compilerOptions": {
+//     // File Layout
+//     // "rootDir": "./src",
+//     // "outDir": "./dist",
+
+//     // Environment Settings
+//     // See also https://aka.ms/tsconfig/module
+//     "module": "nodenext",
+//     "target": "esnext",
+//     "types": [],
+//     // For nodejs:
+//     // "lib": ["esnext"],
+//     // "types": ["node"],
+//     // and npm install -D @types/node
+
+//     // Other Outputs
+//     "sourceMap": true,
+//     "declaration": true,
+//     "declarationMap": true,
+
+//     // Stricter Typechecking Options
+//     "noUncheckedIndexedAccess": true,
+//     "exactOptionalPropertyTypes": true,
+
+//     // Style Options
+//     // "noImplicitReturns": true,
+//     // "noImplicitOverride": true,
+//     // "noUnusedLocals": true,
+//     // "noUnusedParameters": true,
+//     // "noFallthroughCasesInSwitch": true,
+//     // "noPropertyAccessFromIndexSignature": true,
+
+//     // Recommended Options
+//     "strict": true,
+//     "jsx": "react-jsx",
+//     "verbatimModuleSyntax": true,
+//     "isolatedModules": true,
+//     "noUncheckedSideEffectImports": true,
+//     "moduleDetection": "force",
+//     "skipLibCheck": true,
+//   }
+// }
+
+{
+  "compilerOptions": {
+    /* Language and Environment */
+    "target": "ES2020",                               /* Specify ECMAScript target version for output JavaScript. */
+    "module": "NodeNext",                             /* Specify what module code is generated. */
+    "moduleResolution": "NodeNext",                   /* Determine how modules get resolved from imports. */
+
+    /* Projects */
+    "rootDir": "./src",                               /* Specify the root folder of input source files. */
+    "outDir": "./dist",                               /* Specify an output folder for all emitted files. */
+
+    /* Interop Constraints */
+    "esModuleInterop": true,                          /* Emits additional JavaScript to ease support for importing CommonJS modules. */
+    "skipLibCheck": true,                             /* Skip type checking of all declaration files (*.d.ts). */
+
+    /* Emit */
+    "sourceMap": true,                                /* Create source map files for debugging purposes. */
+
+    /* Type Checking */
+    "strict": true,                                   /* Enable all strict type-checking options. */
+    
+    /* Completeness */
+    "types": ["node"]                                 /* Specify type declaration files to be included in compilation. */
+  },
+
+  /* File Inclusion */
+  "include": ["src"]                                  /* Specifies the files/folders the compiler should look at. */
+}
