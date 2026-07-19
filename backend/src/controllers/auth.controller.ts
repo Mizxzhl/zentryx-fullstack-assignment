@@ -1,9 +1,17 @@
 import { Request, Response } from "express";
 import { registerUser } from "../services/auth.service";
+import {  loginUser } from "../services/auth.service";
+
 
 export const register = async (req: Request, res: Response) => {
   try {
     const { name, email, password } = req.body;
+    
+    if (!name || !email || !password) {
+  return res.status(400).json({
+    message: "All fields are required",
+  });
+}
 
     const user = await registerUser(name, email, password);
 
@@ -14,6 +22,36 @@ export const register = async (req: Request, res: Response) => {
   } catch (error) {
     res.status(400).json({
       message: error instanceof Error ? error.message : "Registration failed",
+    });
+  }
+};
+
+// Login Controller
+export const login = async (req: Request, res: Response) => {
+  try {
+    // Get email and password from request
+    const { email, password } = req.body;
+
+    // Check if fields are empty
+    if (!email || !password) {
+      return res.status(400).json({
+        message: "Email and Password are required",
+      });
+    }
+
+    // Login user
+    const result = await loginUser(email, password);
+
+    // Send success response
+    res.status(200).json({
+      message: "Login successful",
+      token: result.token,
+      user: result.user,
+    });
+  } catch (error) {
+    // Handle errors
+    res.status(400).json({
+      message: error instanceof Error ? error.message : "Login failed",
     });
   }
 };
