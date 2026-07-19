@@ -1,5 +1,6 @@
 import express from "express";
 import { connectDB } from "./config/db";
+import authRoutes from "./routes/auth.routes";
 
 const app = express();
 
@@ -14,3 +15,6 @@ app.get("/", (req, res) => {
 app.listen(PORT, () => {
   console.log(`🚀 Server is running at http://localhost:${PORT}`);
 });
+
+app.use(express.json());
+app.use("/api/auth", authRoutes);
