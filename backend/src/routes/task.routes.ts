@@ -26,4 +26,4 @@ router.get("/", authenticate, getAll);
 router.put("/:id", authenticate, update);
 
 // Delete Task
-router.delete("/:id", authenticate, remove);
+router.delete("/:id", authenticate, remve);
