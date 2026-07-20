@@ -13,6 +13,16 @@ export const register = async (req: Request, res: Response) => {
   });
 }
 
+// Validate email format
+const emailRegex =
+  /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
+
+if (!emailRegex.test(email)) {
+  return res.status(400).json({
+    message: "Invalid email format!",
+  });
+}
+
     const user = await registerUser(name, email, password);
 
     res.status(201).json({
