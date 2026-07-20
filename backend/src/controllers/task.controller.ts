@@ -1,6 +1,6 @@
 import { Response } from "express";
 import { AuthRequest } from "../middleware/auth.middleware";
-import { createTask ,getTasks, updateTask,deleteTask} from "../services/task.service";
+import { createTask ,getTasks, updateTask, deleteTask , getTaskAnalytics} from "../services/task.service";
 
 // Create Task Controller
 export const create = async (req: AuthRequest, res: Response) => {
@@ -110,5 +110,19 @@ export const remove = async (
       message: error instanceof Error ? error.message : "Delete failed",
     });
 
+  }
+};
+
+// Task Analytics
+export const analytics = async (req: AuthRequest, res: Response) => {
+  try {
+    // Get analytics for logged-in user
+    const Data = await getTaskAnalytics(req.userId!);
+
+    res.status(200).json(Data);
+  } catch (error) {
+    res.status(500).json({
+      message: error instanceof Error ? error.message : "Failed to fetch analytics",
+    });
   }
 };

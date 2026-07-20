@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { create,getAll ,update , remove } from "../controllers/task.controller";
+import { create,getAll ,update , remove, analytics } from "../controllers/task.controller";
 import { authenticate } from "../middleware/auth.middleware";
 
 const router = Router();
@@ -22,8 +22,13 @@ export default router;
 // Get all tasks
 router.get("/", authenticate, getAll);
 
+
+// Task Analytics
+router.get("/analytics", authenticate, analytics);
+
 // Update Task
 router.put("/:id", authenticate, update);
 
 // Delete Task
-router.delete("/:id", authenticate, remve);
+router.delete("/:id", authenticate, remove);
+

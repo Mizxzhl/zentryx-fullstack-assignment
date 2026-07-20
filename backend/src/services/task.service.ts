@@ -93,3 +93,42 @@ export const deleteTask = async (
     },
   });
 };
+
+//Task Analytics
+export const getTaskAnalytics = async (userId: string) => {
+  const totalTasks = await prisma.task.count({
+    where: {
+      userId,
+    },
+  });
+
+  const completedTasks = await prisma.task.count({
+    where: {
+      userId,
+      status: "Completed",
+    },
+  });
+
+  const pendingTasks = await prisma.task.count({
+    where: {
+      userId,
+      status: "pending",
+    },
+  });
+
+  const highPriorityTasks = await prisma.task.count({
+    where: {
+      userId,
+      priority: "high",
+    },
+  });
+
+  return {
+    totalTasks,
+    completedTasks,
+    pendingTasks,
+    highPriorityTasks,
+  };
+};
+
+// Counts records instead of returning all tasks[prisma.task.count(...)]
