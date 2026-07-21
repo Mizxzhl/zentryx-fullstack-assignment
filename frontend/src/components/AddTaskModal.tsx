@@ -50,8 +50,8 @@ const AddTaskModal = ({
   };
 
   return (
-    <div className="fixed inset-0 bg-black/40 flex items-center justify-center">
-      <div className="bg-white rounded-lg shadow-lg w-full max-w-lg p-6">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
+      <div className="max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-lg bg-white p-5 shadow-lg sm:p-6">
 
         <h2 className="text-2xl font-bold mb-6">
           {task ? "Edit Task" : "Add New Task"}
@@ -103,19 +103,19 @@ const AddTaskModal = ({
             className="w-full border rounded-lg px-4 py-2"
           />
 
-          <div className="flex justify-end gap-3">
+          <div className="flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
 
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 bg-gray-300 rounded-lg"
+              className="w-full rounded-lg bg-gray-300 px-4 py-2 sm:w-auto"
             >
               Cancel
             </button>
 
             <button
               type="submit"
-              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+              className="w-full rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700 sm:w-auto"
             >
               {task ? "Save Changes" : "Create Task"}
             </button>

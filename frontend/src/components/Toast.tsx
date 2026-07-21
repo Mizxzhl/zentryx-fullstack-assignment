@@ -28,7 +28,7 @@ export const ToastProvider = ({ children }: { children: ReactNode }) => {
       {toast && (
         <div
           role="alert"
-          className={`fixed right-4 top-4 z-50 flex items-center gap-3 rounded-lg px-4 py-3 text-white shadow-lg ${
+          className={`fixed left-4 right-4 top-4 z-50 flex items-center justify-between gap-3 rounded-lg px-4 py-3 text-white shadow-lg sm:left-auto sm:right-4 sm:w-auto ${
             toast.kind === "success" ? "bg-green-600" : "bg-red-600"
           }`}
         >

@@ -143,16 +143,16 @@ const Dashboard = () => {
           </p>
         </div>
 
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2">
           <button
             onClick={() => setShowModal(true)}
-            className="px-4 py-2 text-white bg-blue-600 rounded-lg hover:bg-blue-700"
+            className="flex-1 whitespace-nowrap rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700 sm:flex-none"
           >
             + Add Task
           </button>
           <button
             onClick={handleLogout}
-            className="px-4 py-2 text-white bg-red-600 rounded-lg hover:bg-red-700"
+            className="flex-1 whitespace-nowrap rounded-lg bg-red-600 px-4 py-2 text-white hover:bg-red-700 sm:flex-none"
           >
             Logout
           </button>
@@ -176,7 +176,7 @@ const Dashboard = () => {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 gap-6 mb-8 lg:grid-cols-2">
+      <div className="mb-8 grid grid-cols-1 gap-6 lg:grid-cols-2">
         <div className="rounded-lg bg-white p-6 shadow">
           <h2 className="mb-4 text-xl font-bold">Task Status Distribution</h2>
           <div className="h-72">
