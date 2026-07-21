@@ -8,6 +8,7 @@ const Login = () => {
   const { showToast } = useToast();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -16,6 +17,7 @@ const Login = () => {
 
       // Save JWT
       localStorage.setItem("token", response.data.token);
+      localStorage.setItem("userName", response.data.user.name);
 
       showToast("Login successful!");
 
@@ -30,7 +32,17 @@ const Login = () => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <div className="w-full max-w-md bg-white shadow-lg rounded-lg p-8">
-        <h1 className="text-3xl font-bold text-center mb-6">Login</h1>
+        <div className="mb-8 text-center">
+          <p className="text-sm font-semibold uppercase tracking-[0.25em] text-blue-600">
+            Task Manager
+          </p>
+          <h1 className="mt-2 text-3xl font-bold text-slate-900">
+            Welcome back
+          </h1>
+          <p className="mt-2 text-sm text-slate-500">
+            Sign in to organize your work and stay on track.
+          </p>
+        </div>
 
         <form onSubmit={handleLogin} className="space-y-4">
           <div>
@@ -49,14 +61,23 @@ const Login = () => {
           <div>
             <label className="block mb-2 font-medium">Password</label>
 
-            <input
-              type="password"
-              placeholder="Enter your password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              className="w-full border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
+            <div className="relative">
+              <input
+                type={showPassword ? "text" : "password"}
+                placeholder="Enter your password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                className="w-full rounded-lg border px-4 py-2 pr-16 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword((isVisible) => !isVisible)}
+                className="absolute inset-y-0 right-3 text-sm font-medium text-blue-600 hover:text-blue-800"
+              >
+                {showPassword ? "Hide" : "Show"}
+              </button>
+            </div>
           </div>
 
           <button className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition">

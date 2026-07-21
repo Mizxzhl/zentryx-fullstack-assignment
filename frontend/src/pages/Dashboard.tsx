@@ -33,6 +33,8 @@ const Dashboard = () => {
     statusDistribution: { completed: 0, inProgress: 0, todo: 0 },
     priorityBreakdown: { high: 0, medium: 0, low: 0 },
   });
+  const [currentDateTime, setCurrentDateTime] = useState(new Date());
+  const userName = localStorage.getItem("userName") ?? "there";
 
   const fetchTasks = async () => {
     try {
@@ -59,6 +61,11 @@ const Dashboard = () => {
   // Fetch tasks and analytics when the page loads.
   useEffect(() => {
     void refreshTasksAndAnalytics();
+  }, []);
+
+  useEffect(() => {
+    const timer = window.setInterval(() => setCurrentDateTime(new Date()), 1000);
+    return () => window.clearInterval(timer);
   }, []);
 
   const handleEdit = (task: Task) => {
@@ -88,8 +95,20 @@ const Dashboard = () => {
 
   const handleLogout = () => {
     localStorage.removeItem("token");
+    localStorage.removeItem("userName");
     navigate("/");
   };
+
+  const sortedTasks = [...tasks].sort((firstTask, secondTask) => {
+    const priorityOrder: Record<string, number> = { High: 0, Medium: 1, Low: 2 };
+    const priorityDifference =
+      (priorityOrder[firstTask.priority.toString()] ?? 3) -
+      (priorityOrder[secondTask.priority.toString()] ?? 3);
+
+    if (priorityDifference !== 0) return priorityDifference;
+
+    return new Date(firstTask.dueDate).getTime() - new Date(secondTask.dueDate).getTime();
+  });
 
   const statusChartData = [
     { name: "Completed", value: analytics.statusDistribution.completed },
@@ -106,18 +125,25 @@ const Dashboard = () => {
   const statusColors = ["#22c55e", "#3b82f6", "#f59e0b"];
 
   return (
-    <div className="p-8">
+    <div className="min-h-screen bg-slate-50 p-4 sm:p-8">
       {/* Dashboard Header */}
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold">Dashboard</h1>
+      <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <p className="text-sm font-semibold uppercase tracking-wider text-blue-600">Task Management</p>
+          <h1 className="text-3xl font-bold text-slate-900">Welcome back, {userName}!</h1>
+          <p className="mt-1 text-sm text-slate-500">
+            {currentDateTime.toLocaleDateString(undefined, {
+              weekday: "long",
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+            })}
+            {" · "}
+            {currentDateTime.toLocaleTimeString()}
+          </p>
+        </div>
 
         <div className="flex gap-2">
-          <button
-            onClick={() => navigate("/")}
-            className="px-4 py-2 text-white bg-gray-600 rounded-lg hover:bg-gray-700"
-          >
-            Home
-          </button>
           <button
             onClick={() => setShowModal(true)}
             className="px-4 py-2 text-white bg-blue-600 rounded-lg hover:bg-blue-700"
@@ -214,46 +240,72 @@ const Dashboard = () => {
 
       {/* Task List */}
       {tasks.length === 0 ? (
-        <p>No tasks found.</p>
+        <div className="rounded-lg border border-dashed border-slate-300 bg-white p-8 text-center text-slate-500">
+          No tasks found. Add your first task to get started.
+        </div>
       ) : (
-        <div className="space-y-4">
-          {tasks.map((task) => (
-            <div key={task.id} className="border rounded-lg p-4 shadow">
-              <h2 className="font-bold text-xl">{task.title}</h2>
-
-              <p>{task.description}</p>
-
-              <p>
-                <strong>Status:</strong> {task.status}
-              </p>
-
-              <p>
-                <strong>Priority:</strong> {task.priority}
-              </p>
-
-              <p>
-                <strong>Due:</strong>{" "}
-                {new Date(task.dueDate).toLocaleDateString()}
-              </p>
-<div className="mt-4 flex justify-end gap-2">
-
-  <button
-    onClick={() => handleEdit(task)}
-    className="bg-yellow-500 text-white px-4 py-2 rounded-lg hover:bg-yellow-600"
-  >
-    Edit
-  </button>
-
-  <button
-    onClick={() => handleDelete(task.id)}
-    className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700"
-  >
-    Delete
-  </button>
-
-</div>
+        <div>
+          <div className="mb-4 flex items-end justify-between">
+            <div>
+              <h2 className="text-2xl font-bold text-slate-900">Your Tasks</h2>
+              <p className="text-sm text-slate-500">High-priority tasks and nearer due dates appear first.</p>
             </div>
-          ))}
+            <span className="rounded-full bg-slate-200 px-3 py-1 text-sm font-medium text-slate-700">
+              {tasks.length} tasks
+            </span>
+          </div>
+
+          <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+            {sortedTasks.map((task) => (
+              <article
+                key={task.id}
+                className="flex min-h-56 flex-col rounded-xl border border-slate-200 bg-white p-5 shadow-sm transition hover:-translate-y-1 hover:shadow-md"
+              >
+                <div className="flex items-start justify-between gap-3">
+                  <h3 className="text-lg font-bold text-slate-900">{task.title}</h3>
+                  <span
+                    className={`shrink-0 rounded-full px-2.5 py-1 text-xs font-semibold ${
+                      task.priority === "High"
+                        ? "bg-red-100 text-red-700"
+                        : task.priority === "Medium"
+                          ? "bg-amber-100 text-amber-700"
+                          : "bg-green-100 text-green-700"
+                    }`}
+                  >
+                    {task.priority}
+                  </span>
+                </div>
+
+                <p className="mt-2 line-clamp-2 text-sm text-slate-600">
+                  {task.description || "No description provided."}
+                </p>
+
+                <div className="mt-4 flex flex-wrap gap-2 text-sm">
+                  <span className="rounded-md bg-blue-50 px-2 py-1 font-medium text-blue-700">
+                    {task.status}
+                  </span>
+                  <span className="rounded-md bg-slate-100 px-2 py-1 text-slate-700">
+                    Due {new Date(task.dueDate).toLocaleDateString()}
+                  </span>
+                </div>
+
+                <div className="mt-auto flex justify-end gap-2 pt-5">
+                  <button
+                    onClick={() => handleEdit(task)}
+                    className="rounded-lg bg-amber-500 px-3 py-2 text-sm text-white hover:bg-amber-600"
+                  >
+                    Edit
+                  </button>
+                  <button
+                    onClick={() => handleDelete(task.id)}
+                    className="rounded-lg bg-red-600 px-3 py-2 text-sm text-white hover:bg-red-700"
+                  >
+                    Delete
+                  </button>
+                </div>
+              </article>
+            ))}
+          </div>
         </div>
       )}
     </div>
