@@ -1,9 +1,11 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import api from "../services/api";
+import { useToast } from "../components/Toast";
 
 const Register = () => {
   const navigate = useNavigate();
+  const { showToast } = useToast();
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -19,12 +21,12 @@ const Register = () => {
         password,
       });
 
-      alert("✅ Registration successful!");
+      showToast("Registration successful!");
 
       navigate("/");
     } catch (error) {
       console.error("Registration failed", error);
-      alert("❌ Registration failed.");
+      showToast("Registration failed.", "error");
     }
   };
 

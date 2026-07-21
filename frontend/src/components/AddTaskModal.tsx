@@ -16,6 +16,7 @@ const AddTaskModal = ({
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [priority, setPriority] = useState("Medium");
+  const [status, setStatus] = useState("Todo");
   const [dueDate, setDueDate] = useState("");
 
   useEffect(() => {
@@ -24,6 +25,7 @@ const AddTaskModal = ({
     setTitle(task.title);
     setDescription(task.description ?? "");
     setPriority(task.priority.toString());
+    setStatus(task.status.toString());
     setDueDate(new Date(task.dueDate).toISOString().split("T")[0]);
   }, [task]);
 
@@ -38,7 +40,7 @@ const AddTaskModal = ({
     };
 
     if (task) {
-      await api.put(`/tasks/${task.id}`, taskData);
+      await api.put(`/tasks/${task.id}`, { ...taskData, status });
     } else {
       await api.post("/tasks", taskData);
     }
@@ -81,6 +83,18 @@ const AddTaskModal = ({
             <option>Medium</option>
             <option>Low</option>
           </select>
+
+          {task && (
+            <select
+              value={status}
+              onChange={(e) => setStatus(e.target.value)}
+              className="w-full border rounded-lg px-4 py-2"
+            >
+              <option value="Todo">Todo</option>
+              <option value="In Progress">In Progress</option>
+              <option value="Completed">Completed</option>
+            </select>
+          )}
 
           <input
             type="date"

@@ -96,38 +96,47 @@ export const deleteTask = async (
 
 //Task Analytics
 export const getTaskAnalytics = async (userId: string) => {
-  const totalTasks = await prisma.task.count({
-    where: {
-      userId,
-    },
+  const startOfToday = new Date();
+  startOfToday.setHours(0, 0, 0, 0);
+
+  const startOfTomorrow = new Date(startOfToday);
+  startOfTomorrow.setDate(startOfTomorrow.getDate() + 1);
+
+  const activeTasks = await prisma.task.count({
+    where: { userId, status: { not: "Completed" } },
   });
 
-  const completedTasks = await prisma.task.count({
+  const completedToday = await prisma.task.count({
     where: {
       userId,
       status: "Completed",
+      updatedAt: { gte: startOfToday, lt: startOfTomorrow },
     },
   });
 
-  const pendingTasks = await prisma.task.count({
+  const overdueTasks = await prisma.task.count({
     where: {
       userId,
-      status: "pending",
+      status: { not: "Completed" },
+      dueDate: { lt: startOfToday },
     },
   });
 
-  const highPriorityTasks = await prisma.task.count({
-    where: {
-      userId,
-      priority: "high",
-    },
-  });
+  const [completed, inProgress, todo, high, medium, low] = await Promise.all([
+    prisma.task.count({ where: { userId, status: "Completed" } }),
+    prisma.task.count({ where: { userId, status: "In Progress" } }),
+    prisma.task.count({ where: { userId, status: "Todo" } }),
+    prisma.task.count({ where: { userId, priority: "High" } }),
+    prisma.task.count({ where: { userId, priority: "Medium" } }),
+    prisma.task.count({ where: { userId, priority: "Low" } }),
+  ]);
 
   return {
-    totalTasks,
-    completedTasks,
-    pendingTasks,
-    highPriorityTasks,
+    activeTasks,
+    completedToday,
+    overdueTasks,
+    statusDistribution: { completed, inProgress, todo },
+    priorityBreakdown: { high, medium, low },
   };
 };
 

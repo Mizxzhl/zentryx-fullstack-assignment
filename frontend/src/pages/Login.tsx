@@ -1,9 +1,11 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import api from "../services/api";
+import { useToast } from "../components/Toast";
 
 const Login = () => {
   const navigate = useNavigate();
+  const { showToast } = useToast();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -15,13 +17,13 @@ const Login = () => {
       // Save JWT
       localStorage.setItem("token", response.data.token);
 
-      alert("✅ Login successful!");
+      showToast("Login successful!");
 
       // Go to dashboard
       navigate("/dashboard");
     } catch (error) {
       console.error("Login failed", error);
-      alert("❌ Invalid email or password.");
+      showToast("Invalid email or password.", "error");
     }
   };
 

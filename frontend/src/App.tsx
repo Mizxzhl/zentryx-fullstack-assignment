@@ -9,6 +9,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
+import { ToastProvider } from "./components/Toast";
 
 // function App() {
 //   const [count, setCount] = useState(0)
@@ -128,15 +129,16 @@ import Dashboard from "./pages/Dashboard";
 function App() {
   return (
 <BrowserRouter>
+      <ToastProvider>
       <Routes>
         <Route path="/" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
       </Routes>
+      </ToastProvider>
     </BrowserRouter>
   );
 }
 
 export default App;
-
 
